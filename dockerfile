@@ -1,26 +1,10 @@
-# Use an official Python runtime as a parent image
-FROM python:3.8
-
-# Set environment variables
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
-
-# Create and set the working directory
-RUN mkdir /app
+FROM python:3.11.4-alpine
+COPY . /app
 WORKDIR /app
 
-# Install dependencies
-COPY requirements.txt /app/
-RUN pip install --no-cache-dir -r requirements.txt
+RUN python3 -m venv /opt/env
 
-# Copy the .env file
-COPY .env /app/.env
-
-# Copy the Django application into the container
-COPY . /app/
-
-# Expose the port the application will run on
-EXPOSE 8000
-
-# Start the application
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+RUN pip install pip --upgrade
+RUN /opt/venv/bin/pip pip install -r requirements.txt
+RUN chmod +x entrypoint.sh
+CMD ["/app/entrypoint.sh"]
