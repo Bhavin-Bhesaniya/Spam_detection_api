@@ -1,4 +1,4 @@
-version: '3'
+version: "3.11"
 
 services:
   db:
@@ -12,7 +12,9 @@ services:
   web:
     build:
       context: .
-    command: python manage.py runserver 0.0.0.0:8000
+      dockerfile: Dockerfile
+    image: django-k8spam:v1
+    command: sh -c "chmod +x /app/migrate.sh && sh /app/migrate.sh && /app/entrypoint.sh"
     volumes:
       - .:/app
     ports:
@@ -21,10 +23,27 @@ services:
       - db
     environment:
       SECRET_KEY: ${SECRET_KEY}
-      DB_HOST: ${DB_HOST}
+      DB_HOST: mysql_db
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
       DB_NAME: ${DB_NAME}
-      DB_PORT: ${DB_PORT}
+      DB_PORT: "3306"
       EMAIL_HOST_USER: ${EMAIL_HOST_USER}
       EMAIL_HOST_PASSWORD: ${EMAIL_HOST_PASSWORD}
+    env_file:
+      - .env
+
+  mysql_db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:

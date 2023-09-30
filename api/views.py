@@ -177,8 +177,10 @@ class LoginView(View):
                     return redirect('home')
                 else:
                     messages.error(request, 'Please verify your email before logging in.')
+                    return render(request, 'login.html', {'form': form})
             else:
                 messages.error(request, 'Invalid email or password.')
+                return render(request, 'login.html', {'form': form})
         else:
             return render(request, 'login.html', {'form': form})
 

@@ -60,9 +60,11 @@ class LoginForm(forms.Form):
 
         if email and password:
             user = MyUser.objects.filter(email=email).first()
-            if user is None:
+            if user is not None:
                 if not user.check_password(password):
                     raise forms.ValidationError("Invalid email or password")
+            else:
+                raise forms.ValidationError("User does not exist")
         return cleaned_data
 
 
