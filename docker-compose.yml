@@ -1,49 +1,29 @@
 version: "3.11"
 
 services:
-  db:
-    image: mysql:8.0
-    environment:
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
-      MYSQL_DATABASE: ${DB_NAME}
-      MYSQL_USER: ${DB_USER}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
-
   web:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: ./Dockerfile
     image: django-k8spam:v1
-    command: sh -c "chmod +x /app/migrate.sh && sh /app/migrate.sh && /app/entrypoint.sh"
-    volumes:
-      - .:/app
+    command: python manage.py runserver 0.0.0.0:8000 
     ports:
       - "8000:8000"
-    depends_on:
-      - db
-    environment:
-      SECRET_KEY: ${SECRET_KEY}
-      DB_HOST: mysql_db
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
-      DB_NAME: ${DB_NAME}
-      DB_PORT: "3306"
-      EMAIL_HOST_USER: ${EMAIL_HOST_USER}
-      EMAIL_HOST_PASSWORD: ${EMAIL_HOST_PASSWORD}
     env_file:
-      - .env
+      - ./.env
 
-  mysql_db:
-    image: mysql:8.0
-    environment:
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
-      MYSQL_DATABASE: ${DB_NAME}
-      MYSQL_USER: ${DB_USER}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
-    ports:
-      - "3306:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
+  # mysql_db:
+  #   image: mysql:8
+  #   volumes:
+  #     - mysql_data:/var/lib/mysql/data
+  #   environment:
+  #     MYSQL_DATABASE: ${DB_NAME}
+  #     MYSQL_USER: ${DB_USER}
+  #     MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+  #     MYSQL_HOST: ${DB_HOST}
+  #   ports:
+  #     - "3307:3306"
+    
 
-volumes:
-  mysql_data:
+# volumes:
+#   mysql_data:
