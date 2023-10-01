@@ -30,6 +30,6 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
-          script: |
-            cd $GITHUB_WORKSPACE
+          script: |           
+            cd /home/runner/work/Spam_mail_detection_using_ml_and_api/Spam_mail_detection_using_ml_and_api
             docker-compose up -d
