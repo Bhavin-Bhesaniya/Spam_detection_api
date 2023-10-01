@@ -31,5 +31,5 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           script: |           
-            cd /home/runner/work/Spam_mail_detection_using_ml_and_api/Spam_mail_detection_using_ml_and_api
+            cd /app
             docker-compose up -d
