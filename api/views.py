@@ -199,15 +199,14 @@ class RegenerateVerificationEmailView(View):
             if form.is_valid():
                 email = form.cleaned_data['email']
                 user = MyUser.objects.filter(email=email).first()
-                print(user)
                 if user is not None:
                     if user.is_email_verified:
+                        messages.error(request, 'Already verified, please log in.')
+                        return redirect('login')
+                    else:
                         generate_verification_link(request, email)
                         messages.success(request, 'A new verification email has been sent.')
                         return render(request, 'mailvalid/checkbox.html')
-                    else:
-                        messages.error(request, 'Already verified, please log in.')
-                        return redirect('login')
                 else:
                     messages.error(request, 'Please register your account first')
                     return redirect('register')
@@ -218,6 +217,7 @@ class RegenerateVerificationEmailView(View):
             return redirect('login')  # Redirect to the login page
         else:
             return redirect('home')
+
 
 @login_required(login_url='login')
 def HomeView(request):

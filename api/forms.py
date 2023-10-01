@@ -74,15 +74,6 @@ class RegenerateEmailForm(forms.Form):
         model = MyUser
         fields = ['email']
 
-    # def clean(self):
-    #     cleaned_data = super().clean()
-    #     email = cleaned_data.get("email")
-    #     user = MyUser.objects.filter(email=email).first()
-    #     print(user)
-    #     if not user:
-    #         raise forms.ValidationError("This email is not associated with any user.")
-    #     return user
-
 
 class UserInputForm(forms.Form):
     user_input = forms.CharField(

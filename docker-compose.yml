@@ -6,24 +6,25 @@ services:
       context: .
       dockerfile: ./Dockerfile
     image: django-k8spam:v1
-    command: python manage.py runserver 0.0.0.0:8000 
+    command: ./migrate.sh
+    depends_on:
+      - mysql_db
     ports:
       - "8000:8000"
     env_file:
       - ./.env
 
-  # mysql_db:
-  #   image: mysql:8
-  #   volumes:
-  #     - mysql_data:/var/lib/mysql/data
-  #   environment:
-  #     MYSQL_DATABASE: ${DB_NAME}
-  #     MYSQL_USER: ${DB_USER}
-  #     MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
-  #     MYSQL_HOST: ${DB_HOST}
-  #   ports:
-  #     - "3307:3306"
+  mysql_db:
+    image: mysql:8
+    volumes:
+      - mysql_data:/var/lib/mysql/
+    environment:
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_HOST: ${DB_HOST}
+    ports:
+      - "3307:3306"
     
-
-# volumes:
-#   mysql_data:
+volumes:
+  mysql_data:

@@ -3,7 +3,7 @@ python-dotenv
 mysqlclient
 nltk
 pandas
-scikit-learn
+scikit-learn==1.3
 matplotlib
 djangorestframework
 django_ratelimit

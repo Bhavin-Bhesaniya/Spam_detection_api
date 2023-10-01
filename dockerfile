@@ -1,4 +1,3 @@
-# Use an official Python runtime as a parent image
 FROM python:3.11.4-slim-buster
 
 # Prevent Python from writing .pyc files to disk (equivalent to python -B)
@@ -18,20 +17,25 @@ RUN apt-get update && apt-get install -y \
     gcc \
     && apt-get clean
 
-# Upgrade pip to the latest version
+
 RUN pip install pip --upgrade
 
 COPY requirements.txt /app/
 
-
 # Install the project dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the contents of the local src directory to the working directory in the container
+
 COPY . /app
 
-# Expose port 8000 for your Django application
+RUN chmod +x /app/migrate.sh
+
+# Install NLTK and download the required tokenizer models
+RUN pip install nltk
+RUN python -c "import nltk; nltk.download('punkt'); nltk.download('stopwords')"
+
 EXPOSE 8000
 
-# Command to start your Django application (modify this as needed)
+ENV DJANGO_SETTINGS_MODULE=spam_mail_project.settings
+
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
