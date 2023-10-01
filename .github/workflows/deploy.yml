@@ -7,22 +7,30 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
-
+    runs-on: self-hosted
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up SSH agent
-        uses: webfactory/ssh-agent@v0.5.4
-        with:
-          ssh-private-key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+      - name: Login Dockerhub 
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME}}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD}}
+        run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+  
+      - name: Build the Docker image  
+        run: docker build -t spam_mail_detection_using_ml_and_api .
+      
+      - name: Push to Docker Hub
+        run: docker push cyberbhavin/spam_mail_detection_using_ml_and_api:latest
 
       - name: Deploy to EC2
-        run: |
-          ssh -i ${{ secrets.EC2_SSH_PRIVATE_KEY }} ec2-user@15.206.167.144 << EOF
-            cd /path/to/your/project
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          script: 
             docker-compose down
             docker-compose pull
             docker-compose up -d
-          EOF
