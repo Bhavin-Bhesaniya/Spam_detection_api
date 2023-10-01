@@ -12,17 +12,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Login Dockerhub 
-        env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME}}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD}}
-        run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+      # - name: Login Dockerhub 
+      #   env:
+      #     DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME}}
+      #     DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD}}
+      #   run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
   
-      - name: Build the Docker image  
-        run: docker build -t spam_mail_detection_using_ml_and_api .
+      # - name: Build the Docker image  
+      #   run: docker build -t spam_mail_detection_using_ml_and_api .
       
-      - name: Push to Docker Hub
-        run: docker push cyberbhavin/spam_mail_detection_using_ml_and_api:latest
+      # - name: Push to Docker Hub
+      #   run: docker push cyberbhavin/spam_mail_detection_using_ml_and_api:latest
 
       - name: Deploy to EC2
         uses: appleboy/ssh-action@master
