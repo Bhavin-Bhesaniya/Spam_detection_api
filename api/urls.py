@@ -1,5 +1,6 @@
 from django.urls import path
 from .views import *
+from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
 
 urlpatterns = [
     path('', IndexView.as_view(), name ='index'),
@@ -11,4 +12,11 @@ urlpatterns = [
     path('services', ServicesView, name ='services'),
     path('regenerate-verification-email', RegenerateVerificationEmailView.as_view(), name='regenerate_verification_email'),
     path('api/spam_classifier', SpamClassifierApi.as_view(), name ='api_sc'),    
+    
+    
+    path('password_reset/', CustomPasswordResetView.as_view(template_name='reset/password_reset.html'), name='password_reset'),
+    path('password_reset/done/', PasswordResetDoneView.as_view(template_name='reset/password_reset_done.html'), name='password_reset_done'),
+    path('password-reset-confirm/<str:uidb64>/<str:token>/', PasswordResetConfirmView.as_view(template_name='reset/password_reset_confirm.html'), name='password_reset_confirm'),
+    path('password-reset-complete/', PasswordResetCompleteView.as_view(template_name='reset/password_reset_complete.html'), name='password_reset_complete'),
+
 ]

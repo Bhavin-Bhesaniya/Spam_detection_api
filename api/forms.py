@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, PasswordResetForm
 from .models import MyUser
 import re
 from django.core import validators
@@ -68,11 +68,16 @@ class LoginForm(forms.Form):
         return cleaned_data
 
 
-class RegenerateEmailForm(forms.Form):
+class RegenerateResetEmailForm(forms.ModelForm):
     email = forms.EmailField(required=True)
     class Meta:
         model = MyUser
         fields = ['email']
+
+
+class ResetPasswordForm(forms.Form):
+    email = forms.EmailField()
+    
 
 
 class UserInputForm(forms.Form):

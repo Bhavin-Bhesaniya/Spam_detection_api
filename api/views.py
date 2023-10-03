@@ -1,5 +1,5 @@
 from django.views import View
-from .forms import UserInputForm, RegistrationForm, LoginForm, RegenerateEmailForm
+from .forms import UserInputForm, RegistrationForm, LoginForm, RegenerateResetEmailForm, ResetPasswordForm
 from .classifier import classify_spam
 from django.contrib.auth import authenticate, login, logout
 from rest_framework.views import APIView
@@ -26,6 +26,7 @@ from django_ratelimit.exceptions import Ratelimited
 from datetime import timedelta
 from django.core.cache import cache
 from rest_framework_simplejwt.tokens import RefreshToken
+from django.contrib.auth.views import PasswordResetView
 
 
 def get_tokens_for_user_api(user):
@@ -35,11 +36,12 @@ def get_tokens_for_user_api(user):
         'access' : str(refresh.access_token), 
     }
 
+
 def ratelimit_error(request, exception=None):
     return render(request, 'ratelimit_error.html')
 
 
-def generate_verification_link(request, email):
+def generate_verification_link(request, email, verification_type):
     user = MyUser.objects.filter(email=email).first()
     if not user:
         raise forms.ValidationError("This email is not associated with any user.")
@@ -48,7 +50,11 @@ def generate_verification_link(request, email):
     token = default_token_generator.make_token(user)
     current_site = get_current_site(request)
     domain = current_site.domain
-    verify_url = reverse('verify_email', kwargs={'uidb64': uid, 'token': token})
+
+    if verification_type == 'password_reset':
+        verify_url = reverse('password_reset_confirm', kwargs={'uidb64': uid, 'token': token})
+    else :
+        verify_url = reverse('verify_email', kwargs={'uidb64': uid, 'token': token})
     
     expiry_time = timezone.now() + timedelta(minutes=2)
     timestamp = int(expiry_time.timestamp())
@@ -61,7 +67,6 @@ def generate_verification_link(request, email):
     recipient_list = [user.email]
     send_mail(subject, message, from_email, recipient_list)
     
-    # return verify_url
 
 
 
@@ -119,7 +124,8 @@ class RegisterView(View):
             password = form.cleaned_data['password']
             user = MyUser.objects.create_user(name=name, email=email, password=password, is_email_verified=False)
             if user is not None:
-                generate_verification_link(request, email)
+                verification_type = 'register'
+                generate_verification_link(request, email, verification_type)
                 return render(request, 'mailvalid/checkbox.html')
             else:
                 messages.error(request, 'An error occurred during registration.')
@@ -187,14 +193,14 @@ class LoginView(View):
 
 class RegenerateVerificationEmailView(View):
     def get(self, request):
-        form = RegenerateEmailForm()
+        form = RegenerateResetEmailForm()
         if request.user.is_authenticated:
             return redirect('home')
         return redirect('register')
         # return render(request, 'mailvalid/email_verification_failure.html', {'form': form})
 
     def post(self, request):
-        form = RegenerateEmailForm(request.POST)
+        form = RegenerateResetEmailForm(request.POST)
         try:
             if form.is_valid():
                 email = form.cleaned_data['email']
@@ -264,6 +270,27 @@ class SpamClassifierApi(APIView):
             }
         }
         return Response(documentation, status=status.HTTP_200_OK)
+
+
+class CustomPasswordResetView(PasswordResetView):
+    def get(self, request):
+        form = ResetPasswordForm(request.POST)
+        return render(request, 'reset/password_reset.html', {'form': form})
+    
+    def post(self, request):
+        form = ResetPasswordForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            user = MyUser.objects.filter(email=email).first()
+            if user is not None:
+                verification_type = 'password_reset'
+                generate_verification_link(request, email, verification_type)
+                return redirect('password_reset_done')
+            else:
+                messages.error(request, 'Please register your account first')
+                return redirect('register')
+        else:
+            return render(request, 'reset/password_reset.html', {'form': form})
 
 
 def ServicesView(request):
