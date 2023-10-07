@@ -21,12 +21,9 @@ jobs:
     
     - name: Build the Docker image
       run: | 
-          docker-compose build mysql_db 
           docker-compose build spam-docker-image 
           docker images
     
     - name: Push to Docker hub
-      run: |
-        docker push cyberbhavin/mysql_db
-        docker push cyberbhavin/spam-docker-image:latest
+      run: docker push docker.io/$DOCKER_USERNAME/spam-docker-image:latest
       
