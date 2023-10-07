@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
-    image: django_spam:v1
+    image: spam-docker-image:latest
     command: ./migrate.sh
     depends_on:
       - mysql_db

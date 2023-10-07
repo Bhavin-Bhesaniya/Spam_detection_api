@@ -17,8 +17,8 @@ jobs:
       run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
     - name: Build the Docker image
       run: | 
-          docker-compose build spam-docker-image
+          docker-compose build spam-docker-image mysql_db
           docker images
     - name: Push to Docker hub
-      run: docker push $DOCKER_USERNAME/spam-docker-image:latest
+      run: docker push spam-docker-image:latest mysql_db
       
