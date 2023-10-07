@@ -15,10 +15,16 @@ jobs:
         DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
         DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
       run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+    
+    - name: Remove old Docker images
+      run: docker system prune -a --force
+    
     - name: Build the Docker image
       run: | 
-          docker-compose build spam-docker-image mysql_db
+          # docker-compose build spam-docker-image mysql_db
+          docker-compose build
           docker images
+    
     - name: Push to Docker hub
-      run: docker push spam-docker-image:latest mysql_db
+      run: docker push
       
