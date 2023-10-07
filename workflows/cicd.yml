@@ -22,13 +22,18 @@ jobs:
     - name: Build the Docker image
       run: | 
           docker-compose build spam-docker-image 
+          docker-compose build spam-mysql-db
           docker images
     
     - name: Tag the Docker image
-      run: docker tag spam-docker-image docker.io/cyberbhavin/spam-docker-image:latest
+      run: |
+        docker tag spam-docker-image docker.io/cyberbhavin/spam-docker-image:latest
+        docker tag spam-docker-image docker.io/cyberbhavin/spam-mysql-db:latest
 
     - name: Push to Docker hub
-      run: docker push cyberbhavin/spam-docker-image:latest
+      run: |
+        docker push cyberbhavin/spam-docker-image:latest
+        docker push cyberbhavin/spam-mysql-db:latest
       
   deploy:
     needs: build
@@ -38,6 +43,8 @@ jobs:
         run: |
           docker pull mysql:8
           docker pull cyberbhavin/spam-docker-image:latest
+          docker pull cyberbhavin/spam-mysql-db:latest
+          docker images
       - name: Delete Old and Run new Container
         run: |
           docker-compose down --force
