@@ -21,7 +21,7 @@ jobs:
     
     - name: Build the Docker image
       run: | 
-          docker-compose -t build spam-docker-image:latest 
+          docker-compose build -t spam-docker-image:latest 
           docker images
     
     - name: Push to Docker hub
