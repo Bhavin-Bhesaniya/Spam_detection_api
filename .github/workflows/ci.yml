@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
     - uses: actions/checkout@v3
@@ -24,6 +24,9 @@ jobs:
           docker-compose build spam-docker-image 
           docker images
     
+    - name: Tag the Docker image
+      run: docker tag spam-docker-image docker.io/cyberbhavin/spam-docker-image:latest
+
     - name: Push to Docker hub
-      run: docker push docker.io/cyberbhavin/spam-docker-image:latest
+      run: docker push cyberbhavin/spam-docker-image:latest
       
