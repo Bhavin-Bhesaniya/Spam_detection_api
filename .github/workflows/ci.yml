@@ -26,5 +26,5 @@ jobs:
           docker images
     
     - name: Push to Docker hub
-      run: docker push
+      run: docker push .
       
