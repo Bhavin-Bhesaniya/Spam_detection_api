@@ -20,12 +20,13 @@ jobs:
       run: docker system prune -a --force
     
     - name: Build the Docker image
-      run: docker-compose build spam-docker-image
+      run: | 
+          docker-compose build spam-docker-image 
+          docker images
     
     - name: Tag the Docker image
       run: docker tag spam-docker-image docker.io/cyberbhavin/spam-docker-image:latest
-          docker images
-    
+
     - name: Push to Docker hub
       run: docker push cyberbhavin/spam-docker-image:latest
       
