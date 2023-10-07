@@ -21,12 +21,21 @@ jobs:
     
     - name: Build the Docker image
       run: | 
-          docker-compose build spam-docker-image 
+          docker-compose -t build spam-docker-image:latest 
           docker images
     
-    - name: Tag the Docker image
-      run: docker tag spam-docker-image docker.io/cyberbhavin/spam-docker-image:latest
-
     - name: Push to Docker hub
       run: docker push cyberbhavin/spam-docker-image:latest
       
+  deploy:
+    needs: build
+    runs-on: ip-172-31-5-47
+    steps:
+      - name: Pull image from dockerhub
+        run: |
+          docker pull mysql:8
+          docker pull cyberbhavin/spam-docker-image:latest
+      - name: Delete Old and Run new Container
+        run: |
+          docker-compose down --force
+          docker-compose up 
