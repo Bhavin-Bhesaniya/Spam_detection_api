@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
-    image: django-k8spam:v1
+    image: django_spam:v1
     command: ./migrate.sh
     depends_on:
       - mysql_db
@@ -25,6 +25,13 @@ services:
       MYSQL_HOST: ${DB_HOST}
     ports:
       - "3307:3306"
-    
+
+  # nginx:
+  #   build: ./nginx  
+  #   ports:
+  #     - "80:80"
+  #   depends_on:
+  #     - web
+
 volumes:
   mysql_data:

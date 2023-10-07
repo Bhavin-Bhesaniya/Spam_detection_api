@@ -102,9 +102,8 @@ class IndexView(View):
     
         try:
             if request.limited:
-                raise Ratelimited
+                return render(request, 'ratelimit_error.html')
         except Exception as e:
-            print(e.message)
             return render(request, 'ratelimit_error.html')
         return render(request, 'index.html', {'user_input_form': user_input_form})
 

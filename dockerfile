@@ -39,3 +39,4 @@ EXPOSE 8000
 ENV DJANGO_SETTINGS_MODULE=spam_mail_project.settings
 
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# CMD ["gunicorn", "spam_mail_project.wsgi:application", "--bind", "0.0.0.0:8000"]
