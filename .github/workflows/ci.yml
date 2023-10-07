@@ -25,5 +25,5 @@ jobs:
           docker images
     
     - name: Push to Docker hub
-      run: docker push docker.io/$DOCKER_USERNAME/spam-docker-image:latest
+      run: docker push docker.io/cyberbhavin/spam-docker-image:latest
       
