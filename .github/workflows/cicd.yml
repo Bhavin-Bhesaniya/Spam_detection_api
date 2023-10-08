@@ -41,7 +41,7 @@ jobs:
     
     steps:
       - name: Install Docker Compose
-        run: sudo apt install docker-compose
+        run: sudo apt install docker-compose -y
       
       - name: Pull image from dockerhub
         run: |
