@@ -49,5 +49,6 @@ jobs:
       - name: Delete Old and Run new Container
         run: |
           docker rm -f spam-docker-image spam-mysql-db
+          docker images
           docker run -d -p 3307:3306 --name spam-mysql-db -v mysql_data:/var/lib/mysql/ mysql:8
-          docker run -d -p 8000:8000 --name spam-docker-image --link spam-mysql-db:mysql:external cyberbhavin/spam-docker-image:latest
+          docker run -d -p 8000:8000 --name spam-docker-image --link-alias spam-mysql-db:external-mysql cyberbhavin/spam-docker-image:latest
