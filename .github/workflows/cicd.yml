@@ -39,10 +39,7 @@ jobs:
     needs: build
     runs-on: self-hosted
     
-    steps:
-      - name: Install Docker Compose
-        run: sudo apt install docker-compose -y
-      
+    steps:     
       - name: Pull image from dockerhub
         run: |
           docker pull mysql:8
@@ -51,5 +48,9 @@ jobs:
           docker images
       - name: Delete Old and Run new Container
         run: |
-          docker-compose down --force
-          docker-compose up -d spam-docker-image spam-mysql-db 
+          docker rm -f spam-docker-image spam-mysql-db
+          docker run -d -p 3307:3306 --name spam-mysql-db -v mysql_data:/var/lib/mysql/ mysql:8
+          docker run -d -p 8000:8000 --name spam-docker-image --link spam-mysql-db:mysql cyberbhavin/spam-docker-image:latest
+      - name: Restart application if not running
+        run: |
+          docker restart spam-docker-image 
