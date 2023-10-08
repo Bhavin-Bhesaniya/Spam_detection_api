@@ -53,7 +53,7 @@ jobs:
           docker images
       - name: Remove old Docker images
         run: |
-          docker rmi $(docker images --filter=reference='!latest' -qa)
+          docker images --filter dangling=true -q | xargs -r docker rmi
           docker images
       - name: Run new Container
         run: |
