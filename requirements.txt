@@ -10,5 +10,3 @@ django_ratelimit
 djangorestframework-simplejwt
 django-cors-headers
 gunicorn
-requests
-boto3

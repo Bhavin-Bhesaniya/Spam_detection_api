@@ -32,7 +32,7 @@ RUN chmod +x /app/migrate.sh
 
 # Install NLTK and download the required tokenizer models
 RUN pip install nltk
-RUN python -c "import nltk; nltk.download('punkt'); nltk.download('stopwords')"
+RUN python -c "import nltk; nltk.download('punkt'); nltk.download('stopwords');"
 
 EXPOSE 8000
 

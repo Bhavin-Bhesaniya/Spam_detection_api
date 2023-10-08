@@ -1,10 +1,5 @@
-CREATE DATABASE IF NOT EXISTS 'spam_mail_detection_db';
-GO
-USE 'spam_mail_detection_db';
-GO
-CREATE USER 'bhavin'@'localhost' IDENTIFIED BY 'SpamMysql@1234.';
-GO
-GRANT ALL PRIVILEGES ON spam_mail_detection_db.* TO 'bhavin'@'localhost';
-GO
+CREATE DATABASE IF NOT EXISTS `spam_mail_detection_db`;
+
+CREATE USER 'bhavin'@'%' IDENTIFIED WITH mysql_native_password BY 'SpamMysql@1234.';
+GRANT ALL PRIVILEGES ON spam_mail_detection_db.* TO 'bhavin'@'%';
 FLUSH PRIVILEGES;
-GO
