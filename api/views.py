@@ -196,7 +196,6 @@ class RegenerateVerificationEmailView(View):
         if request.user.is_authenticated:
             return redirect('home')
         return redirect('register')
-        # return render(request, 'mailvalid/email_verification_failure.html', {'form': form})
 
     def post(self, request):
         form = RegenerateResetEmailForm(request.POST)

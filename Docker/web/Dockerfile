@@ -13,6 +13,7 @@ WORKDIR /app
 # Update the package list and install necessary system packages
 RUN apt-get update && apt-get install -y \
     pkg-config \
+    default-libmysqlclient-dev \
     libmariadb-dev \
     gcc \
     && apt-get clean
