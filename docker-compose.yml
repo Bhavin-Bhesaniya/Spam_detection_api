@@ -1,24 +1,24 @@
 version: "3.11"
 
 services:
-  spam-docker-image:
+  spam-docker-images:
     build:
       context: .
       dockerfile: ./Docker/web/Dockerfile
-    image: spam-docker-image:latest
+    image: spam-docker-images:latest
     command: ./migrate.sh
     depends_on:
-      - spam-mysql-db
+      - spam-mysqldb
     ports:
       - "8000:8000"
     env_file:
       - ./.env
 
-  spam-mysql-db:
+  spam-mysqldb:
     build:
       context: .
       dockerfile: ./Docker/mysql/Dockerfile
-    image: spam-mysql-db:latest
+    image: spam-mysqldb:latest
     volumes:
       - mysql_data:/var/lib/mysql/
     environment:

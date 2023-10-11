@@ -21,19 +21,19 @@ jobs:
     
     - name: Build the Docker image
       run: | 
-          docker-compose build spam-docker-image 
-          docker-compose build spam-mysql-db
+          docker-compose build spam-docker-images 
+          docker-compose build spam-mysqldb
           docker images
     
     - name: Tag the Docker image
       run: |
-        docker tag spam-docker-image docker.io/cyberbhavin/spam-docker-image:latest
-        docker tag spam-mysql-db docker.io/cyberbhavin/spam-mysql-db:latest
+        docker tag spam-docker-images docker.io/cyberbhavin/spam-docker-images:latest
+        docker tag spam-mysqldb docker.io/cyberbhavin/spam-mysqldb:latest
 
     - name: Push to Docker hub
       run: |
-        docker push cyberbhavin/spam-docker-image:latest
-        docker push cyberbhavin/spam-mysql-db:latest
+        docker push cyberbhavin/spam-docker-images:latest
+        docker push cyberbhavin/spam-mysqldb:latest
       
   deploy:
     needs: build
@@ -42,13 +42,13 @@ jobs:
     steps:     
       - name: Pull image from dockerhub
         run: |
-          docker pull cyberbhavin/spam-docker-image:latest
-          docker pull cyberbhavin/spam-mysql-db:latest
+          docker pull cyberbhavin/spam-docker-images:latest
+          docker pull cyberbhavin/spam-mysqldb:latest
           docker images
       - name: Delete Old Container
         run: |
-          docker rm -f spam-docker-image
-          docker rm -f spam-mysql-db
+          docker rm -f spam-docker-images
+          docker rm -f spam-mysqldb
           docker images
       - name: Remove old Docker images
         run: |
@@ -56,5 +56,5 @@ jobs:
           docker images
       - name: Run new Container
         run: |
-          docker run -d -p 3307:3306 --name spam-mysql-db -v mysql_data:/var/lib/mysql/ -e MYSQL_ROOT_PASSWORD={{secrets.MYSQL_ROOT_PASSWORD}} cyberbhavin/spam-mysql-db:latest
-          docker run -d -p 8000:8000 --name spam-docker-image --link spam-mysql-db:external-mysql cyberbhavin/spam-docker-image:latest
+          docker run -d -p 3307:3306 --name spam-mysqldb -v mysql_data:/var/lib/mysql/ -e MYSQL_ROOT_PASSWORD={{secrets.MYSQL_ROOT_PASSWORD}} cyberbhavin/spam-mysqldb:latest
+          docker run -d -p 8000:8000 --name spam-docker-images --link spam-mysqldb:external-mysql cyberbhavin/spam-docker-images:latest
