@@ -29,12 +29,5 @@ services:
     ports:
       - "3307:3306"
 
-  # nginx:
-  #   build: ./nginx  
-  #   ports:
-  #     - "80:80"
-  #   depends_on:
-  #     - web
-
 volumes:
   mysql_data:
