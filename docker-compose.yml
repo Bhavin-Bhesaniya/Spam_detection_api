@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: ./Docker/web/Dockerfile
     image: spam-docker-images:latest
-    command: ./migrate.sh
+    # command: ./migrate.sh
     depends_on:
       - spam-mysqldb
     ports:
