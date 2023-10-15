@@ -8,8 +8,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = False
-# ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "").split()
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", "[::1]", "3.110.175.92"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "[::1]", "65.1.45.80"]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -89,6 +88,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, '/static'),
+    os.path.join(BASE_DIR, '/app/static'),
 ]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 

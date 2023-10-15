@@ -16,6 +16,7 @@ RUN apt-get update && apt-get install -y \
     default-libmysqlclient-dev \
     libmariadb-dev \
     gcc \
+    nano \
     && apt-get clean
 
 
@@ -29,7 +30,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . /app
 
-RUN chmod +x /app/migrate.sh
+# RUN chmod +x /app/migrate.sh
 
 # Install NLTK and download the required tokenizer models
 RUN pip install nltk
@@ -39,5 +40,5 @@ EXPOSE 8000
 
 ENV DJANGO_SETTINGS_MODULE=spam_mail_project.settings
 
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
-# CMD ["gunicorn", "spam_mail_project.wsgi:application", "--bind", "0.0.0.0:8000"]
+# CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["sh", "-c", "python manage.py collectstatic && python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"]
