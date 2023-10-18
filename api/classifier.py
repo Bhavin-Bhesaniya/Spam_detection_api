@@ -7,10 +7,10 @@ import nltk
 import string
 import joblib
 
-tfidf = pickle.load(open('dataset/model/vectorizer.pkl','rb'))
+tfidf = pickle.load(open('Model/vectorizer.pkl','rb'))
 
 model_names = ['rfmodel.pkl', 'knmodel.pkl', 'gbdtmodel.pkl','mnbmodel.pkl']
-models = {model_name: joblib.load(f'dataset/model/{model_name}') for model_name in model_names}
+models = {model_name: joblib.load(f'Model/{model_name}') for model_name in model_names}
 
 user_data = []
 malicious_patterns = [
@@ -63,13 +63,13 @@ def classify_spam(user_message, select_model):
             else:
                 result_message = "Not Spam"
             
-            existing_data = pd.read_csv("dataset/user_insert_value.csv")
+            existing_data = pd.read_csv("Model/user_insert_value.csv")
             if not existing_data[(existing_data['target'] == result) & (existing_data['text'] == user_message)].empty:
                 return result_message
             else:
                 user_data.append({'target': result, 'text': user_message})
                 df = pd.DataFrame(user_data)
-                df.to_csv("dataset/user_insert_value.csv", mode='a', header=False, index=False)
+                df.to_csv("Model/user_insert_value.csv", mode='a', header=False, index=False)
                 return result_message
         else:
             result_message = "Model Not found. Please select provided model only"

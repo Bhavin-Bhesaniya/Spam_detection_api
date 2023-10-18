@@ -8,7 +8,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = False
-ALLOWED_HOSTS = ["127.0.0.1", "[::1]", "65.1.45.80"]
+ALLOWED_HOSTS = ["127.0.0.1", "65.1.45.80"]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -106,7 +106,7 @@ AUTHENTICATION_BACKENDS = [
 ]
 AUTH_USER_MODEL = 'api.MyUser'
 
-SESSION_COOKIE_AGE = 3600
+SESSION_COOKIE_AGE = 900
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(days=1),

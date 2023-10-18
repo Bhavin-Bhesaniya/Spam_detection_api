@@ -69,7 +69,6 @@ def generate_verification_link(request, email, verification_type):
     
 
 
-
 @method_decorator(ratelimit(key='ip', rate='10/m', block=True),name="dispatch")
 @method_decorator(ratelimit(key='user', rate='10/m', block=True), name="dispatch")
 class IndexView(View):
@@ -89,6 +88,7 @@ class IndexView(View):
                 return redirect('register') 
             try:
                 result_message = classify_spam(user_input, user_selected_model)
+                user_input_form = UserInputForm()
                 content = {'user_input_form': user_input_form, 'result_message': result_message}
                 request.session['form_submission_count'] = form_submission_count + 1
                 return render(request, 'index.html', content)
@@ -97,6 +97,7 @@ class IndexView(View):
                 user_input_form.add_error('user_input', error_message)
         else:
             result_message = "Invalid input. Please try again."
+            user_input_form = UserInputForm()
             content = {'user_input_form': user_input_form, 'result_message': result_message}
             return render(request, 'index.html', content)
     

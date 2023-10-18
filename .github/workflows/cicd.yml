@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: SPAM Detection CI/CD
 
 on:
   push:
@@ -23,7 +23,6 @@ jobs:
       run: | 
           docker-compose build spam-docker-images 
           docker-compose build spam-mysqldb
-          docker images
     
     - name: Tag the Docker image
       run: |
@@ -44,16 +43,13 @@ jobs:
         run: |
           docker pull cyberbhavin/spam-docker-images:latest
           docker pull cyberbhavin/spam-mysqldb:latest
-          docker images
-      - name: Delete Old Container
+          
+      - name: Delete Old Container and Images
         run: |
           docker rm -f spam-docker-images
           docker rm -f spam-mysqldb
-          docker images
-      - name: Remove old Docker images
-        run: |
           docker images --filter dangling=true -q | xargs -r docker rmi
-          docker images
+      
       - name: Run new Container
         run: |
           docker volume create mysql_data

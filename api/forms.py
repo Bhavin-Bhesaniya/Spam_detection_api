@@ -86,7 +86,7 @@ class UserInputForm(forms.Form):
         widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
     )
     user_selected_model = forms.ChoiceField(
-        choices=[('rfmodel.pkl', 'RF_model.pkl'), ('knmodel.pkl', 'KN_model.pkl'),
-                 ('gbdtmodel.pkl', 'GBDT_model.pkl'), ('mnbmodel.pkl', 'MNB_model.pkl')],
+        choices=[('rfmodel.pkl', 'RandomForest'), ('knmodel.pkl', 'KNeighbors'),
+                 ('gbdtmodel.pkl', 'GradientBoosting'), ('mnbmodel.pkl', 'MultinomialNB')],
         widget=forms.RadioSelect(attrs={'class': 'radio-buttons'})
     )
