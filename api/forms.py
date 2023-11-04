@@ -82,11 +82,16 @@ class ResetPasswordForm(forms.Form):
 
 class UserInputForm(forms.Form):
     user_input = forms.CharField(
+        
         max_length=1000,
         widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
+        label="Enter your mail "
     )
     user_selected_model = forms.ChoiceField(
-        choices=[('rfmodel.pkl', 'RandomForest'), ('knmodel.pkl', 'KNeighbors'),
-                 ('gbdtmodel.pkl', 'GradientBoosting'), ('mnbmodel.pkl', 'MultinomialNB')],
-        widget=forms.RadioSelect(attrs={'class': 'radio-buttons'})
+        choices=[('rfmodel.pkl', 'RandomForest'), 
+                 ('knmodel.pkl', 'KNeighbors'),
+                 ('gbdtmodel.pkl', 'GradientBoosting'),
+                 ('mnbmodel.pkl', 'Multinaibayes'),],
+        widget=forms.RadioSelect(attrs={'class': 'radio-buttons'}),
+        label="Select Model "
     )

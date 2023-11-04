@@ -13,19 +13,6 @@ model_names = ['rfmodel.pkl', 'knmodel.pkl', 'gbdtmodel.pkl','mnbmodel.pkl']
 models = {model_name: joblib.load(f'Model/{model_name}') for model_name in model_names}
 
 user_data = []
-malicious_patterns = [
-    r"(?i)\b(SELECT|INSERT|UPDATE|DELETE|DROP|UNION|ALTER|CREATE|TRUNCATE)\b",
-    r'(<\s*script|javascript\s*:|onload\s*=\s*|document\s*\.\s*cookie|eval\s*\(|\bbase64\b)',
-    r'\bexec\((.*?)\)',
-    r'\b(\\x00|\\n|\\r|%0[0-9a-fA-F]{2}|&#0[0-9]+;|&#x0[0-9a-fA-F]+;)\b',
-    r'\b(<\s*iframe\s*src=|<\s*img\s*src=|<\s*a\s*href=|<\s*script\s*src=)',
-    r'\b(<\s*object|<\s*embed|<\s*applet|<\s*meta|<\s*link)',
-    r'\balert\s*\(\s*["\'](.*?)["\']\s*\)',
-    r'\b(document\.location\s*=|window\.location\s*=|top\.location\s*=)',
-    r'\bjavascript\s*:',
-    r'\bexpression\s*\(',
-    r'\bstyle\s*=[^>]expression\s*\(',
-]
 
 def transform_text(text):
     text = text.lower()
@@ -51,7 +38,8 @@ def classify_spam(user_message, select_model):
         return result_message
     user_message = ''.join(user_message.splitlines())
 
-    if not is_malicious(user_message):
+    # if not is_malicious(user_message):
+    if user_message:
         transformed_text = transform_text(user_message)
         vector_input = tfidf.transform([transformed_text])
         

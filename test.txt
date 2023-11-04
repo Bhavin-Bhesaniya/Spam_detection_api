@@ -1,0 +1,5 @@
+rfmodel.pkl     1 1 1 1 1   1 0 0 0 1 
+knmodel.pkl     1 1 1 1 1   1 0 0 0 1
+gbdtmodel.pkl   1 1 1 1 1   1 0 0 0 1
+etcmodel.pkl    0 0 0 0 1   1 1 0 1 1
+mnbmodel.pkl    1 1 1 1 1   1 0 0 0 1

@@ -6,5 +6,5 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 
 
 class SpamClassifierSerializer(serializers.Serializer):
-    user_message = serializers.CharField(max_length=100)
+    user_message = serializers.CharField()
     user_selected_model = serializers.CharField(max_length=100)

@@ -10,15 +10,14 @@
     <strong>Classification Result:</strong> The model provides a classification result, indicating whether the message is spam or legitimate. The API returns this result to the user.<br><br>
 
     <h3 style="margin-top: 10px; margin-bottom: 5px;">API Endpoints - </h3>
-    <strong>GET api/spam-classifier:</strong> Retrieve this API documentation.<br>
-    <strong>POST api/spam-classifier:</strong> Classify user messages for spam. Provide a JSON message in user_message and select a model in user_selected_model.<br>
+    <strong>POST api/spam_classifier:</strong> Classify user messages for spam. Provide a JSON message in user_message and select a model in user_selected_model.<br>
     <p><strong>Authorization:</strong> Bearer your_access_token     To get token register yourself</p>
     <pre>
-{
-    'user_message': 'Your message',
-    'user_selected_model': 'select a model from the list' 
-    //['rfmodel.pkl', 'knmodel.pkl', 'gbdtmodel.pkl', 'mnbmodel.pkl']
-}
-        </pre>
+    {
+        'user_message': 'Your message',
+        'user_selected_model': 'select a model from below list' 
+        //['rfmodel.pkl', 'mnbmodl.pkl']
+    }
+    </pre>
 </div>
 {% endblock %}

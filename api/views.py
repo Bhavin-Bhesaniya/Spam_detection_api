@@ -260,16 +260,6 @@ class SpamClassifierApi(APIView):
                 return Response({"message": message}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def get(self, request):
-        documentation = {
-            "Description": "This is API documentation for Spam Classifier API",
-            "Endpoints": {
-                "POST api/spam-classifier": "Classify user messages for spam. Pass json message in user_message and select model in user_selected_model. Ex - { 'user_message' : 'Your message'}",
-                "GET api/spam-classifier": "Retrieve this API documentation.",
-            }
-        }
-        return Response(documentation, status=status.HTTP_200_OK)
-
 
 class CustomPasswordResetView(PasswordResetView):
     def get(self, request):
