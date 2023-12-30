@@ -469,3 +469,5 @@ target,text
 1,Subject: Amazon is offering a special discount for a limited time only Body: Don't miss out on our special discount on [insert product or service here]! Click here to order now: https://www.amazon.com/sale/s?k=sale
 1,Subject: Your receipt from Amazon Body: Thank you for your purchase at Amazon. Here is your receipt: https://www.amazon.com/receipts
 1,Subject: Amazon shipping confirmation Body: Your order from Amazon has shipped! Click here to track your shipment:
+1,Subject: Amazon shipping confirmation Body
+0,Hey this is spam
