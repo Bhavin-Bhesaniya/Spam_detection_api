@@ -3,7 +3,6 @@ FROM python:3.11.4-slim-buster
 RUN mkdir /app
 WORKDIR /app
 
-# Update the package list and install necessary system packages
 RUN apt-get update && \
     apt-get install -y \
     pkg-config \
@@ -15,11 +14,8 @@ RUN apt-get update && \
 
 
 COPY requirements.txt /app/
-
 RUN pip install pip --upgrade && pip install --no-cache-dir -r requirements.txt
 COPY . /app
-
-# Install NLTK and download the required tokenizer models
 RUN pip install nltk
 RUN python -c "import nltk; nltk.download('punkt'); nltk.download('stopwords');"
 
