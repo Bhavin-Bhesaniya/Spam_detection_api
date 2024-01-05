@@ -5,53 +5,89 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Login Dockerhub
-      env:
-        DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
-        DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
-      run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-    
-    - name: Remove old Docker images
-      run: docker system prune -a --force
-    
-    - name: Build the Docker image
-      run: | 
-          docker-compose build spam-docker-images 
-          docker-compose build spam-mysqldb
-    
-    - name: Tag the Docker image
-      run: |
-        docker tag spam-docker-images docker.io/cyberbhavin/spam-docker-images:latest
-        docker tag spam-mysqldb docker.io/cyberbhavin/spam-mysqldb:latest
+      - name: Checkout Source
+      - uses: actions/checkout@v3
 
-    - name: Push to Docker hub
-      run: |
-        docker push cyberbhavin/spam-docker-images:latest
-        docker push cyberbhavin/spam-mysqldb:latest
-      
-  deploy:
-    needs: build
-    runs-on: self-hosted
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: 'ap-south-1'
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+        with:
+          registries:
+            ECR_REGISTRY_1: ${{ secrets.ECR_REGISTRY_1 }}
+            ECR_REGISTRY_2: ${{ secrets.ECR_REGISTRY_2 }}
+          mask-password: 'true'
+
     
-    steps:     
-      - name: Pull image from dockerhub
+      - name: Build, tag, and push image
+        id: build-image
+        env:
+          # # ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REGISTRY_1: ${{ steps.login-ecr.outputs.registry[0] }}
+          ECR_REGISTRY_2: ${{ steps.login-ecr.outputs.registry[1] }}
+          IMAGE_TAG: latest
+          REPOSITORY1: spam-detection-web-app
+          REPOSITORY2: spam-mysql-db
         run: |
-          docker pull cyberbhavin/spam-docker-images:latest
-          docker pull cyberbhavin/spam-mysqldb:latest
+          docker-compose build -t $ECR_REGISTRY_1/$REPOSITORY1:$IMAGE_TAG .
+          docker-compose build -t $ECR_REGISTRY_2/$REPOSITORY2:$IMAGE_TAG .
+          docker push $ECR_REGISTRY_1/$REPOSITORY1:$IMAGE_TAG
+          docker push $ECR_REGISTRY_2/$REPOSITORY2:$IMAGE_TAG
           
-      - name: Delete Old Container and Images
-        run: |
-          docker rm -f spam-docker-images
-          docker rm -f spam-mysqldb
-          docker images --filter dangling=true -q | xargs -r docker rmi
+        # echo "image=$ECR_REGISTRY/$REPOSITORY1:$IMAGE_TAG" >> $GITHUB_OUTPUT1 
+        # echo "image=$ECR_REGISTRY/$REPOSITORY2:$IMAGE_TAG" >> $GITHUB_OUTPUT2 
+
+      # - name: Fill in the new image ID in the Amazon ECS task definition
+      #   id: task-def
+      #   uses: aws-actions/amazon-ecs-render-task-definition@v1
+      #   with:
+      #     task-definition: spam-detection-webapp-task-definition.json 
+      #     container-name1: spam-detection-web-app
+      #     image1: $ECR_REGISTRY_1/$REPOSITORY1:$IMAGE_TAG  
+      #     container-name2: spam-mysql-db
+      #     image2: $ECR_REGISTRY_2/$REPOSITORY2:$IMAGE_TAG
+      #     file: ecs-task-def-updated.json
+          
+      # - name: Deploy Amazon ECS task definition
+      #   uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+      #   with:
+      #     task-definition: ecs-task-def-updated.json
+      #     service: spam-detection-webapp-serv-ice
+      #     cluster: ECS-SPAM-Cluster
+      #     wait-for-service-stability: true    
+  
+  
+  #   - name: Remove old Docker images
+  #     run: docker system prune -a --force
+    
       
-      - name: Run new Container
-        run: |
-          docker volume create mysql_data
-          docker run -d -p 3307:3306 --name spam-mysqldb -v mysql_data:/var/lib/mysql/ -e MYSQL_ROOT_PASSWORD={{secrets.MYSQL_ROOT_PASSWORD}} cyberbhavin/spam-mysqldb:latest
-          docker run -d -p 8000:8000 --name spam-docker-images --link spam-mysqldb:external-mysql cyberbhavin/spam-docker-images:latest
+  # deploy:
+  #   needs: build
+  #   runs-on: self-hosted
+    
+  #   steps:     
+  #     - name: Pull image from dockerhub
+  #       run: |
+  #         docker pull cyberbhavin/spam-docker-images:latest
+  #         docker pull cyberbhavin/spam-mysqldb:latest
+          
+  #     - name: Delete Old Container and Images
+  #       run: |
+  #         docker rm -f spam-docker-images
+  #         docker rm -f spam-mysqldb
+  #         docker images --filter dangling=true -q | xargs -r docker rmi
+      
+  #     - name: Run new Container
+  #       run: |
+  #         docker volume create mysql_data
+  #         docker run -d -p 3307:3306 --name spam-mysqldb -v mysql_data:/var/lib/mysql/ -e MYSQL_ROOT_PASSWORD={{secrets.MYSQL_ROOT_PASSWORD}} cyberbhavin/spam-mysqldb:latest
+  #         docker run -d -p 8000:8000 --name spam-docker-images --link spam-mysqldb:external-mysql cyberbhavin/spam-docker-images:latest
