@@ -6,7 +6,7 @@ services:
       context: ./Docker/web/
     image: spam-detection-web-app:latest
     depends_on:
-      - spam-mysqldb
+      - spam-mysql-db
     ports:
       - "8000:8000"
     env_file:
