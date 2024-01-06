@@ -1,10 +1,10 @@
 version: "3.11"
 
 services:
-  spam-docker-images:
+  spam-detection-web-app:
     build:
       context: ./Docker/web/
-    image: spam-detection-web-images:latest
+    image: spam-detection-web-app:latest
     depends_on:
       - spam-mysqldb
     ports:
@@ -12,11 +12,11 @@ services:
     env_file:
       - ./.env
 
-  spam-mysqldb:
+  spam-mysql-db:
     build:
       context: ./Docker/mysql/
       # dockerfile: ./Docker/mysql/Dockerfile
-    image: spam-mysqldb-image:latest
+    image: spam-mysql-db:latest
     volumes:
       - mysql_data:/var/lib/mysql/
     environment:
