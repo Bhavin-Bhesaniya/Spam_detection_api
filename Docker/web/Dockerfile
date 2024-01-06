@@ -13,7 +13,9 @@ RUN apt-get update && \
     nano \
     && apt-get clean
 
-COPY requirements.txt /app/
+RUN pwd
+
+COPY ./requirements.txt /app
 RUN pip install pip --upgrade && pip install --no-cache-dir -r requirements.txt
 
 # Stage 2: Final stage
