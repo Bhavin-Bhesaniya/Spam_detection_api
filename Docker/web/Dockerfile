@@ -13,8 +13,8 @@ RUN apt-get update && \
     && apt-get clean
 
 COPY requirements.txt /app/
+RUN pip install pip --upgrade && pip install --no-cache-dir -r /app/requirements.txt
 
-RUN pip install pip --upgrade && pip install --no-cache-dir -r requirements.txt
 COPY . /app
 RUN pip install nltk
 RUN python -c "import nltk; nltk.download('punkt'); nltk.download('stopwords');"
