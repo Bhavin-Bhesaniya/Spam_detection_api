@@ -15,9 +15,11 @@ RUN apt-get update && \
 COPY requirements.txt /app/
 RUN pip install pip --upgrade && pip install --no-cache-dir -r /app/requirements.txt
 
-COPY . /app
 RUN pip install nltk
 RUN python -c "import nltk; nltk.download('punkt'); nltk.download('stopwords');"
+
+RUN echo "Current Working Directory: $(pwd)"
+COPY . /app
 
 EXPOSE 8000
 ENV DJANGO_SETTINGS_MODULE=spam_mail_project.settings
