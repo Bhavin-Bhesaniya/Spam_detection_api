@@ -25,21 +25,23 @@ jobs:
         
       - name: Build Image
         run: | 
-          docker-compose build spam-detection-web-app
           docker-compose build spam-mysql-db
+        # docker-compose build spam-detection-web-app
+          
       
       - name: Tag and push image to ECR_REGISTRY_1
         env:
-          ECR_REGISTRY1: ${{ secrets.ECR_REGISTRY_1 }}
+          # ECR_REGISTRY1: ${{ secrets.ECR_REGISTRY_1 }}
           ECR_REGISTRY2: ${{ secrets.ECR_REGISTRY_2 }}
           IMAGE_TAG: latest
-          REPOSITORY_1: spam-detection-web-app
+          # REPOSITORY_1: spam-detection-web-app
           REPOSITORY_2: spam-mysql-db
         run: |
-          docker tag $REPOSITORY_1:$IMAGE_TAG $ECR_REGISTRY/$REPOSITORY_1:$IMAGE_TAG
+
+        # docker tag $REPOSITORY_1:$IMAGE_TAG $ECR_REGISTRY/$REPOSITORY_1:$IMAGE_TAG
           docker tag $REPOSITORY_2:$IMAGE_TAG $ECR_REGISTRY/$REPOSITORY_2:$IMAGE_TAG
 
-          docker push $ECR_REGISTRY/$REPOSITORY_1:$IMAGE_TAG          
+        # docker push $ECR_REGISTRY/$REPOSITORY_1:$IMAGE_TAG          
           docker push $ECR_REGISTRY/$REPOSITORY_2:$IMAGE_TAG
 
       
