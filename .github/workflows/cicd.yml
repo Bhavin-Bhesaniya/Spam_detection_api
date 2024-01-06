@@ -34,7 +34,8 @@ jobs:
           REPOSITORY: spam-detection-web-app
         run: |
           cd Docker/web/
-          docker build -t $ECR_REGISTRY/$REPOSITORY:$IMAGE_TAG ./app
+          echo "Current Working Directory: $PWD"
+          docker build -t $ECR_REGISTRY/$REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$REPOSITORY:$IMAGE_TAG
 
       - name: Build, tag, and push image to ECR_REGISTRY_2
