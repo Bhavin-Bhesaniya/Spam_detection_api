@@ -30,10 +30,9 @@ jobs:
           IMAGE_TAG: latest
           REPOSITORY: spam-detection-web-app
         run: |
-          # cd Docker/web/
           echo "Current Working Directory: $PWD"
           docker-compose build -t $ECR_REGISTRY/$REPOSITORY:$IMAGE_TAG .
-          docker push $ECR_REGISTRY/$REPOSITORY:$IMAGE_TAG
+          docker-compose push $ECR_REGISTRY/$REPOSITORY:$IMAGE_TAG
 
       - name: Build, tag, and push image to ECR_REGISTRY_2
         env:

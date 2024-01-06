@@ -3,8 +3,7 @@ version: "3.11"
 services:
   spam-docker-images:
     build:
-      context: .
-      dockerfile: ./Docker/web/Dockerfile
+      context: ./Docker/web/
     image: spam-detection-web-images:latest
     depends_on:
       - spam-mysqldb
@@ -15,8 +14,8 @@ services:
 
   spam-mysqldb:
     build:
-      context: .
-      dockerfile: ./Docker/mysql/Dockerfile
+      context: ./Docker/mysql/
+      # dockerfile: ./Docker/mysql/Dockerfile
     image: spam-mysqldb-image:latest
     volumes:
       - mysql_data:/var/lib/mysql/
