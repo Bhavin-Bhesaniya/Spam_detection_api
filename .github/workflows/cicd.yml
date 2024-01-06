@@ -37,8 +37,8 @@ jobs:
           # REPOSITORY_1: spam-detection-web-app
           REPOSITORY_2: spam-mysql-db
         run: |
-          docker tag $REPOSITORY_2:$IMAGE_TAG $ECR_REGISTRY_2/$REPOSITORY_2:$IMAGE_TAG
-          docker push $ECR_REGISTRY_2/$REPOSITORY_2:$IMAGE_TAG
+          docker tag spam-mysql-db:latest 348949640551.dkr.ecr.ap-south-1.amazonaws.com/spam-mysql-db:latest
+          docker push 348949640551.dkr.ecr.ap-south-1.amazonaws.com/spam-mysql-db:latest
 
 # docker tag $REPOSITORY_1:$IMAGE_TAG $ECR_REGISTRY/$REPOSITORY_1:$IMAGE_TAG
 # docker push $ECR_REGISTRY/$REPOSITORY_1:$IMAGE_TAG          
