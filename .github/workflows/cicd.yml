@@ -45,9 +45,7 @@ jobs:
 
 
           
-        # echo "image=$ECR_REGISTRY/$REPOSITORY1:$IMAGE_TAG" >> $GITHUB_OUTPUT1 
-        # echo "image=$ECR_REGISTRY/$REPOSITORY2:$IMAGE_TAG" >> $GITHUB_OUTPUT2 
-
+        
       # - name: Fill in the new image ID in the Amazon ECS task definition
       #   id: task-def
       #   uses: aws-actions/amazon-ecs-render-task-definition@v1
