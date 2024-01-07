@@ -1,0 +1,24 @@
+name: Terraform Destroy
+on:
+  workflow_dispatch:
+
+jobs:
+  terraform:
+    name: Terraform Destroy
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: <version> # Replace <version> with the desired Terraform version
+
+      - name: Terraform Init
+        run: terraform init
+        working-directory: ./terraform
+
+      - name: Terraform Destroy
+        run: terraform destroy -auto-approve
+        working-directory: ./terraform
