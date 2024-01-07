@@ -8,8 +8,8 @@ env:
   ECR_REGISTRY_1: ${{ secrets.ECR_REGISTRY_1 }}
   ECR_REGISTRY_2: ${{ secrets.ECR_REGISTRY_2 }}
   IMAGE_TAG: ${{ github.run_number }}
-  REPOSITORY_1: spam-detection-web-app
-  REPOSITORY_2: spam-mysql-db
+  REPOSITORY_1: spam-detection-webapp
+  REPOSITORY_2: spam-mysqldb
 
 jobs:
   build:
@@ -32,8 +32,8 @@ jobs:
         
       - name: Build Image
         run: | 
-          docker-compose build spam-mysql-db
-          docker-compose build spam-detection-web-app
+          docker-compose build spam-mysqldb
+          docker-compose build spam-detection-webapp
           
       - name: Tag and push image to ECR_REGISTRY
         run: |
