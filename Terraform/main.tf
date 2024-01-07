@@ -4,7 +4,6 @@ resource "aws_ecs_cluster" "ecs_cluster" {
 
 resource "aws_ecs_capacity_provider" "ecs_capacity_provider" {
   name = "test1"
-
   auto_scaling_group_provider {
     auto_scaling_group_arn = aws_autoscaling_group.ecs_asg.arn
 
@@ -16,7 +15,6 @@ resource "aws_ecs_capacity_provider" "ecs_capacity_provider" {
     }
   }
 }
-
 
 resource "aws_ecs_cluster_capacity_providers" "ecs_cluster_capacity_providers" {
   cluster_name       = aws_ecs_cluster.ecs_cluster.name
@@ -31,16 +29,14 @@ resource "aws_ecs_cluster_capacity_providers" "ecs_cluster_capacity_providers" {
 resource "aws_ecs_task_definition" "ecs_task_definition" {
   family             = "my-ecs-task"
   network_mode       = "awsvpc"
-  execution_role_arn = "arn:aws:iam::532199187081:role/ecsTaskExecutionRole"
+  execution_role_arn = "arn:aws:iam::348949640551:role/ecsTaskExecutionRole"
   cpu                = 2048
   memory             = 2048
 
   container_definitions = jsonencode([
     {
       name      = "django-app-conatiner"
-      image     = "${aws_ecr_repository.django_repository.repository_url}:latest",
-                  # 348949640551.dkr.ecr.ap-south-1.amazonaws.com/django-app
-
+      image     = "348949640551.dkr.ecr.ap-south-1.amazonaws.com/spam-detection-webapp:latest",
       cpu       = 1024
       memory    = 1024
       essential = true
@@ -67,13 +63,13 @@ resource "aws_ecs_task_definition" "ecs_task_definition" {
     },
     {
       name      = "mysql-db-repo"
-      image     = "348949640551.dkr.ecr.ap-south-1.amazonaws.com/mysql-db-repo:"
+      image     = "348949640551.dkr.ecr.ap-south-1.amazonaws.com/spam-mysqldb:latest"
       cpu       = 256
       memory    = 512
       essential = true
       portMappings = [
         {
-          containerPort = 3307
+          containerPort = 3306
           hostPort      = 3306
           protocol      = "tcp"
         }

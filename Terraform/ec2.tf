@@ -1,6 +1,6 @@
 resource "aws_launch_template" "ecs_lt" {
   name_prefix   = "ecs-template"
-  image_id      = "ami-062c116e449466e7f" # Specify the desired Amazon Linux AMI image ID
+  image_id      = "ami-0597d2f5fd7c7668c" # Specify the desired Amazon Linux AMI image ID
   instance_type = "t2.micro"              # Change the instance type to t2.micro
 
   key_name               = "ecs_keypair"
@@ -10,7 +10,7 @@ resource "aws_launch_template" "ecs_lt" {
   }
 
   block_device_mappings {
-    device_name = "/dev/xvda"
+    device_name = "/dev/sda1"
     ebs {
       volume_size = 30
       volume_type = "gp2"
