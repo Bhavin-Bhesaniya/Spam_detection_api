@@ -44,6 +44,7 @@ jobs:
           docker push 348949640551.dkr.ecr.ap-south-1.amazonaws.com/spam-mysqldb:latest
 
   terraform:
+    needs: build
     name: Terraform Creation
     runs-on: ubuntu-latest
     steps:
