@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: ./Docker/web/Dockerfile
-    image: spam-detection-web-app:latest
+    image: spam-detection-webapp:latest
     depends_on:
       - spam-mysqldb
     ports:
