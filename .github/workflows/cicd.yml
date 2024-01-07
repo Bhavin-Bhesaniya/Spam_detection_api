@@ -32,16 +32,22 @@ jobs:
         
       - name: Build Image
         run: | 
-          docker-compose build spam-mysqldb
-          docker-compose build spam-detection-webapp
+          docker-compose build -t spam-mysqldb
+          docker-compose build -t spam-detection-webapp
           
       - name: Tag and push image to ECR_REGISTRY
         run: |
-          docker tag $REPOSITORY_1:latest $ECR_REGISTRY_1/$REPOSITORY_1:$IMAGE_TAG
-          docker push $ECR_REGISTRY_1/$REPOSITORY_1:$IMAGE_TAG
+          docker tag spam-detection-webapp:latest 348949640551.dkr.ecr.ap-south-1.amazonaws.com/spam-detection-webapp:latest
+          docker push 348949640551.dkr.ecr.ap-south-1.amazonaws.com/spam-detection-webapp:latest
+
+          docker tag spam-mysqldb:latest 348949640551.dkr.ecr.ap-south-1.amazonaws.com/spam-mysqldb:latest
+          docker push 348949640551.dkr.ecr.ap-south-1.amazonaws.com/spam-mysqldb:latest
+
+        # docker tag $REPOSITORY_1:latest $ECR_REGISTRY_1/$REPOSITORY_1:$IMAGE_TAG
+        # docker push $ECR_REGISTRY_1/$REPOSITORY_1:$IMAGE_TAG
           
-          docker tag $REPOSITORY_2:latest $ECR_REGISTRY_2/$REPOSITORY_2:$IMAGE_TAG
-          docker push $ECR_REGISTRY_2/$REPOSITORY_2:$IMAGE_TAG          
+        # docker tag $REPOSITORY_2:latest $ECR_REGISTRY_2/$REPOSITORY_2:$IMAGE_TAG
+        # docker push $ECR_REGISTRY_2/$REPOSITORY_2:$IMAGE_TAG          
         
 
         
