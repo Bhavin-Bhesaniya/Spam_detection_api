@@ -2,7 +2,7 @@ name: SPAM Detection CI/CD
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
 
 env:
   ECR_REGISTRY_1: ${{ secrets.ECR_REGISTRY_1 }}
@@ -24,17 +24,17 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: 'ap-south-1'
+          aws-region: "ap-south-1"
 
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
-        
+
       - name: Build Image
-        run: | 
+        run: |
           docker-compose build spam-mysqldb
           docker-compose build spam-detection-webapp
-          
+
       - name: Tag and push image to ECR_REGISTRY
         run: |
           docker tag spam-detection-webapp:latest 348949640551.dkr.ecr.ap-south-1.amazonaws.com/spam-detection-webapp:latest
@@ -43,56 +43,51 @@ jobs:
           docker tag spam-mysqldb:latest 348949640551.dkr.ecr.ap-south-1.amazonaws.com/spam-mysqldb:latest
           docker push 348949640551.dkr.ecr.ap-south-1.amazonaws.com/spam-mysqldb:latest
 
-        # docker tag $REPOSITORY_1:latest $ECR_REGISTRY_1/$REPOSITORY_1:$IMAGE_TAG
-        # docker push $ECR_REGISTRY_1/$REPOSITORY_1:$IMAGE_TAG
-          
-        # docker tag $REPOSITORY_2:latest $ECR_REGISTRY_2/$REPOSITORY_2:$IMAGE_TAG
-        # docker push $ECR_REGISTRY_2/$REPOSITORY_2:$IMAGE_TAG          
-        
+  terraform:
+    name: Terraform Creation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
 
-        
-      # - name: Fill in the new image ID in the Amazon ECS task definition
-      #   id: task-def
-      #   uses: aws-actions/amazon-ecs-render-task-definition@v1
-      #   with:
-      #     task-definition: spam-detection-webapp-task-definition.json 
-      #     container-name1: spam-detection-web-app
-      #     image1: $ECR_REGISTRY_1/$REPOSITORY1:$IMAGE_TAG  
-      #     container-name2: spam-mysql-db
-      #     image2: $ECR_REGISTRY_2/$REPOSITORY2:$IMAGE_TAG
-      #     file: ecs-task-def-updated.json
-          
-      # - name: Deploy Amazon ECS task definition
-      #   uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-      #   with:
-      #     task-definition: ecs-task-def-updated.json
-      #     service: spam-detection-webapp-serv-ice
-      #     cluster: ECS-SPAM-Cluster
-      #     wait-for-service-stability: true    
-  
-  
-  #   - name: Remove old Docker images
-  #     run: docker system prune -a --force
-    
-      
-  # deploy:
-  #   needs: build
-  #   runs-on: self-hosted
-    
-  #   steps:     
-  #     - name: Pull image from dockerhub
-  #       run: |
-  #         docker pull cyberbhavin/spam-docker-images:latest
-  #         docker pull cyberbhavin/spam-mysqldb:latest
-          
-  #     - name: Delete Old Container and Images
-  #       run: |
-  #         docker rm -f spam-docker-images
-  #         docker rm -f spam-mysqldb
-  #         docker images --filter dangling=true -q | xargs -r docker rmi
-      
-  #     - name: Run new Container
-  #       run: |
-  #         docker volume create mysql_data
-  #         docker run -d -p 3307:3306 --name spam-mysqldb -v mysql_data:/var/lib/mysql/ -e MYSQL_ROOT_PASSWORD={{secrets.MYSQL_ROOT_PASSWORD}} cyberbhavin/spam-mysqldb:latest
-  #         docker run -d -p 8000:8000 --name spam-docker-images --link spam-mysqldb:external-mysql cyberbhavin/spam-docker-images:latest
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+
+      - name: Terraform Init
+        run: terraform init
+        working-directory: ./terraform
+
+      - name: Terraform Validate
+        run: terraform validate
+        working-directory: ./terraform
+
+      - name: Terraform Plan
+        run: terraform plan
+        working-directory: ./terraform
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
+        working-directory: ./terraform
+
+
+name: Terraform Destroy
+on:
+  workflow_dispatch:
+jobs:
+  terraform:
+    name: Terraform Destroy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+
+      - name: Terraform Init
+        run: terraform init
+        working-directory: ./terraform
+
+      - name: Terraform Destroy
+        run: terraform destroy -auto-approve
+        working-directory: ./terraform

@@ -35,10 +35,10 @@ resource "aws_ecs_task_definition" "ecs_task_definition" {
 
   container_definitions = jsonencode([
     {
-      name      = "django-app-conatiner"
+      name      = "spam-detection-webapp"
       image     = "348949640551.dkr.ecr.ap-south-1.amazonaws.com/spam-detection-webapp:latest",
       cpu       = 1024
-      memory    = 1024
+      memory    = 2048
       essential = true
       portMappings = [
         {
@@ -47,25 +47,19 @@ resource "aws_ecs_task_definition" "ecs_task_definition" {
           protocol      = "tcp"
         }
       ]
-      depends_on = [
-        {
-          containerName = "mysql-db-repo"
-          condition     = "START"
-        }
-      ]
       mountPoints = [
         {
-          sourceVolume  = "spam_mysql_db"
-          containerPath = "/var/lib/mysql"
+          sourceVolume  = "mysql_data"
+          containerPath = "/var/lib/docker"
           readOnly      = false
         }
       ]
     },
     {
-      name      = "mysql-db-repo"
+      name      = "spam-mysqldb"
       image     = "348949640551.dkr.ecr.ap-south-1.amazonaws.com/spam-mysqldb:latest"
-      cpu       = 256
-      memory    = 512
+      cpu       = 512
+      memory    = 1024
       essential = true
       portMappings = [
         {
@@ -76,20 +70,26 @@ resource "aws_ecs_task_definition" "ecs_task_definition" {
       ]
       volumes = [
         {
-          name       = "spam_mysql_db"
-          hostPath   = "/path/to/host/volume"
+          name = "mysql_data"
+          host = {
+            sourcePath = "/var/lib/docker/volumes/mysql_data/"
+          }
           dockerPath = "/var/lib/mysql"
         }
       ]
     }
   ])
+  volume {
+    name      = "mysql_data"
+    host_path = "/var/lib/docker/volumes/mysql_data"
+  }
 }
 
 resource "aws_ecs_service" "ecs_service" {
   name            = "my-ecs-service"
   cluster         = aws_ecs_cluster.ecs_cluster.id
   task_definition = aws_ecs_task_definition.ecs_task_definition.arn
-  desired_count   = 2
+  desired_count   = 1
 
   network_configuration {
     subnets         = [aws_subnet.subnet1.id, aws_subnet.subnet2.id]
@@ -112,7 +112,7 @@ resource "aws_ecs_service" "ecs_service" {
 
   load_balancer {
     target_group_arn = aws_lb_target_group.ecs_tg.arn
-    container_name   = "django-app"
+    container_name   = "spam-detection-webapp"
     container_port   = 8000
   }
   depends_on = [aws_autoscaling_group.ecs_asg]

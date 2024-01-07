@@ -18,7 +18,6 @@ RUN pip install pip --upgrade && pip install --no-cache-dir -r /app/requirements
 RUN pip install nltk
 RUN python -c "import nltk; nltk.download('punkt'); nltk.download('stopwords');"
 
-RUN echo "Current Working Directory: $(pwd)"
 COPY . /app
 
 EXPOSE 8000

@@ -1,9 +1,8 @@
 resource "aws_launch_template" "ecs_lt" {
   name_prefix   = "ecs-template"
-  image_id      = "ami-0597d2f5fd7c7668c" # Specify the desired Amazon Linux AMI image ID
+  image_id      = "ami-08e5424edfe926b43" # Specify the desired Amazon Linux AMI image ID
   instance_type = "t2.micro"              # Change the instance type to t2.micro
-
-  key_name               = "ecs_keypair"
+  key_name               = "SPAM_EC2_KEY"
   vpc_security_group_ids = [aws_security_group.security_group.id]
   iam_instance_profile {
     name = "ecsInstanceRole"
@@ -29,7 +28,7 @@ resource "aws_launch_template" "ecs_lt" {
 
 resource "aws_autoscaling_group" "ecs_asg" {
   vpc_zone_identifier = [aws_subnet.subnet1.id, aws_subnet.subnet2.id]
-  desired_capacity    = 2
+  desired_capacity    = 1
   max_size            = 4
   min_size            = 1
 
