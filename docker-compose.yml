@@ -17,7 +17,7 @@ services:
     build:
       context: .
       dockerfile: ./Docker/mysql/Dockerfile
-    image: spam-mysql-db:latest
+    image: spam-mysqldb:latest
     volumes:
       - mysql_data:/var/lib/mysql/
     environment:
