@@ -10,6 +10,8 @@ env:
   IMAGE_TAG: ${{ github.run_number }}
   REPOSITORY_1: spam-detection-webapp
   REPOSITORY_2: spam-mysqldb
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
 jobs:
   build:
@@ -22,8 +24,8 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v3
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-access-key-id: $AWS_ACCESS_KEY_ID
+          aws-secret-access-key: $AWS_SECRET_ACCESS_KEY
           aws-region: "ap-south-1"
 
       - name: Login to Amazon ECR
@@ -65,6 +67,10 @@ jobs:
       - name: Terraform Plan
         run: terraform plan
         working-directory: ./terraform
+        with:
+          aws-access-key-id: $AWS_ACCESS_KEY_ID
+          aws-secret-access-key: $AWS_SECRET_ACCESS_KEY
+          aws-region: "ap-south-1"
 
       - name: Terraform Apply
         run: terraform apply -auto-approve

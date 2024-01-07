@@ -3,6 +3,16 @@ variable "aws_region" {
   default = "ap-south-1"
 }
 
+variable "aws_access_key" {
+  description = "AWS Access Key"
+  type        = string
+}
+
+variable "aws_secret_key" {
+  description = "AWS Secret Key"
+  type        = string
+}
+
 variable "vpc_cidr" {
   description = "CIDR block for main"
   type        = string
