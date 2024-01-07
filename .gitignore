@@ -2,8 +2,8 @@
 __pycache__/
 *.py[cod]
 *$py.class
-.terraform/
 .terraform.lock.hcl
+terraform/.terraform
 
 # C extensions
 *.so
