@@ -32,8 +32,8 @@ jobs:
         
       - name: Build Image
         run: | 
-          docker-compose build -t spam-mysqldb
-          docker-compose build -t spam-detection-webapp
+          docker-compose build spam-mysqldb
+          docker-compose build spam-detection-webapp
           
       - name: Tag and push image to ECR_REGISTRY
         run: |
